@@ -10,15 +10,17 @@ router.use(cookieParser());
 const User = require('../modals/user');
 
 const dotenv = require('dotenv');
-dotenv.config({ path: './env/config.env' });
+dotenv.config({ path: '../env/config.env' });
+const pswrd=process.env.PSWRD;
+const emailAdd=process.env.EMAIL;
 
-
+ 
 //smtp seerver
 var smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "dgdev78@gmail.com",
-        pass: "apophis2029"
+        user: emailAdd,
+        pass: pswrd
     }
 });
 var user, random, mailOptions, host, link;
@@ -52,7 +54,7 @@ router.post('/signup', async (req, res) => {
         console.log("link:" + link);
    
         mailOptions = {
-            from: 'dgdev78@gmail.com',
+            from: emailAdd,
             to: email,
             subject: "Please confirm your Email account",
             html: '<p>Click <a href="' + link + '">here</a> to verify your email</p>'
