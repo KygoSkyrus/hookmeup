@@ -11,10 +11,10 @@ const User = require('../modals/user');
 
 const dotenv = require('dotenv');
 dotenv.config({ path: '../env/config.env' });
-const pswrd=process.env.PSWRD;
-const emailAdd=process.env.EMAIL;
+const pswrd = process.env.PSWRD;
+const emailAdd = process.env.EMAIL;
 
- 
+
 //smtp seerver
 var smtpTransport = nodemailer.createTransport({
     service: "gmail",
@@ -37,7 +37,7 @@ router.post('/signup', async (req, res) => {
 
     if (!firstName || !lastName || !email || !password) {
         return res.status(422).json({ error: "fill all details" });
-    } 
+    }
 
     try {
         const userExist = await User.findOne({ email: email });
@@ -52,7 +52,7 @@ router.post('/signup', async (req, res) => {
         console.log("host:" + host);
         link = "http://" + req.get('host') + "/verify?id=" + random;
         console.log("link:" + link);
-   
+
         mailOptions = {
             from: emailAdd,
             to: email,
@@ -71,7 +71,7 @@ router.post('/signup', async (req, res) => {
                 return res.status(422).json({ message: "email sent" })
             }
         });
-        //ends here
+        //ends here   
 
         user = new User({ firstName, lastName, email, password });
 
@@ -83,35 +83,38 @@ router.post('/signup', async (req, res) => {
 })
 
 //verify
-router.get('/verify',async function (req, res) {
+router.get('/verify', async function (req, res) {
 
-   
+
     console.log(req.protocol + ":/" + req.get('host'));
 
     if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
         console.log("Domain is matched. Information is from Authentic email");
- 
+console.log(req.query.id); 
         if (req.query.id == random) {
+
             console.log("Email " + mailOptions.to + " is been Successfully verified");
             await user.save();
 
-        const token = await user.generateAuthToken();
-        //console.log(token);
-        res.cookie('jwt', token, {
-            expires: new Date(Date.now() + 3600000),
-            httpOnly: true
-        });
-        res.cookie('email', email, {
-            expires: new Date(Date.now() + 3600000),
-            httpOnly: true
-        });
+            const token = await user.generateAuthToken();
+            res.cookie('jwt', token, {
+                expires: new Date(Date.now() + 3600000),
+                httpOnly: true 
+            });
+            res.cookie('email', email, {
+                expires: new Date(Date.now() + 3600000),
+                httpOnly: true
+            });
 
-        res.status(201).json({ message: "user register successfully" })
+            res.status(201).json({ message: "verified and registered" })
+
         } else {
+            res.status(201).json({ message: "not verified" })
             console.log("email is not verified");
         }
 
     } else {
+        res.status(201).json({ message: "unknown source" })
         res.send("Request is from unknown source");
     }
 
