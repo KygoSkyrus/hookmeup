@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { Toast, ToastContainer ,Form, FloatingLabel} from 'react-bootstrap'
+import { Toast, ToastContainer, Form, FloatingLabel } from 'react-bootstrap'
 
 
 
 function Example(props) {
 
     const { notify } = props;
+    const [show, setShow] = useState(true);
 
     return (
         <ToastContainer className="p-3 tst" >
             {notify === true ?
-                <Toast bg="danger" show={notify} onClose={!notify}>
+                <Toast bg="danger" show={show} onClose={() => setShow(false)} delay={3000} autohide>
                     <Toast.Header>
                         <img src='' className="rounded me-2" alt="" />
                         <strong className="me-auto">HookMeUp</strong>
@@ -33,7 +34,7 @@ function Example2(props) {
                         <img src='' className="rounded me-2" alt="" />
                         <strong className="me-auto">HookMeUp</strong>
                     </Toast.Header>
-                    <Toast.Body className="text-light">An email has been sent, please verify</Toast.Body>
+                    <Toast.Body className="text-light">Your account has been verified</Toast.Body>
                 </Toast>
                 : null}
         </ToastContainer>);
@@ -87,7 +88,7 @@ const SignUp = () => {
             window.alert("email already exists");
         } else if (data.message === "email sent") {
             setnotify(true);
-            gotoVerify();
+            //gotoVerify();
 
         } else {
             window.alert("account created successfully");
@@ -97,36 +98,33 @@ const SignUp = () => {
     }
 
 
-
-    const gotoVerify = () => {
 /*
-
-        const interval = setInterval(() => {
-
-            var abc;
-            fetch('/active', {
-                method: 'POST',
-                body: abc
-            }).then((response) => {
-                response.json().then((res) => {
-                    console.log(res.message);
-                    if (res.message == "active") {
-                        console.log("clear interval");
-                        setverified(res.message);
-                        clearInterval(interval);
-                    }
-                })
-            }).catch((error) => console.log(error));
-        }, 1000);
-*/
+    const gotoVerify = () => {
+        
+                const interval = setInterval(() => {
+        
+                    var abc;
+                    fetch('/active', {
+                        method: 'POST',
+                        body: abc
+                    }).then((response) => {
+                        response.json().then((res) => {
+                            console.log(res.message);
+                            if (res.message == "active") {
+                                console.log("clear interval");
+                                setverified(res.message);
+                                clearInterval(interval);
+                            }
+                        })
+                    }).catch((error) => console.log(error));
+                }, 1000);
     }
-
+ */
 
 
 
     return (
         <>
-
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -139,13 +137,7 @@ const SignUp = () => {
                             <form method="post">
                                 <div className="mb-3">
                                     <div className=" w-50 d-inline-block ">
-                                    <FloatingLabel
-    controlId="floatingInput"
-    label="First name"
-    
-  >
-                                        <Form.Control type="text" className="form-control" id="firstName" name="firstName" autoComplete="off" placeholder="First name*" value={user.firstName} onChange={handleInputs} />
-                                        </FloatingLabel>
+                                        <input type="text" className="form-control" id="firstName" name="firstName" autoComplete="off" placeholder="First name*" value={user.firstName} onChange={handleInputs} />
                                     </div>
                                     <div className=" w-50  d-inline-block ">
                                         <input type="text" className="form-control" id="lastName" name="lastName" autoComplete="off" placeholder="Last name*" value={user.lastName} onChange={handleInputs} />

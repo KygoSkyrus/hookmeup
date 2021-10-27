@@ -64,7 +64,7 @@ router.post('/signup', async (req, res) => {
             html: '<p>Click <a href="' + link + '">here</a> to verify your email</p>'
         }
 
-        console.log(mailOptions);
+        console.log(mailOptions);  
 
         smtpTransport.sendMail(mailOptions, function (error, info) {
             if (error) {
@@ -75,9 +75,6 @@ router.post('/signup', async (req, res) => {
                 return res.status(422).json({ message: "email sent" })
             }
         });
-        //ends here   
-
-        //hashing password
 
     } catch (err) {
         console.log(err);
@@ -104,19 +101,17 @@ router.get('/verify', async function (req, res) {
             console.log(user);
             await user.save();
             
-
-            
-/*
+            //cookie
             res.cookie('jwt', token, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true
             });
-            res.cookie('email', email, {
+            res.cookie('email', user.email, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true
             }); 
-*/
-            res.redirect('http://localhost:3000');
+
+            res.redirect('http://localhost:3000/verification');
 
         } else {
             res.status(201).json({ message: "not verified" })
