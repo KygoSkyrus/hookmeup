@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Toast, ToastContainer } from 'react-bootstrap'
+import { Toast, ToastContainer ,Form, FloatingLabel} from 'react-bootstrap'
 
 
 
@@ -8,17 +8,17 @@ function Example(props) {
     const { notify } = props;
 
     return (
-    <ToastContainer className="p-3 tst" >
-        {notify === true ?
-            <Toast bg="danger" show={notify} onClose={!notify}>
-                <Toast.Header>
-                    <img src='' className="rounded me-2" alt="" />
-                    <strong className="me-auto">HookMeUp</strong>
-                </Toast.Header>
-                <Toast.Body className="text-light">An email has been sent, please verify</Toast.Body>
-            </Toast>
-            : null}
-    </ToastContainer>);
+        <ToastContainer className="p-3 tst" >
+            {notify === true ?
+                <Toast bg="danger" show={notify} onClose={!notify}>
+                    <Toast.Header>
+                        <img src='' className="rounded me-2" alt="" />
+                        <strong className="me-auto">HookMeUp</strong>
+                    </Toast.Header>
+                    <Toast.Body className="text-light">An email has been sent, please verify</Toast.Body>
+                </Toast>
+                : null}
+        </ToastContainer>);
 }
 
 function Example2(props) {
@@ -26,17 +26,17 @@ function Example2(props) {
     const { verified } = props;
 
     return (
-    <ToastContainer className="p-3 tst" >
-        {verified === "verified and registered" ?
-            <Toast bg="success" show={true} onClose={false}>
-                <Toast.Header>
-                    <img src='' className="rounded me-2" alt="" />
-                    <strong className="me-auto">HookMeUp</strong>
-                </Toast.Header>
-                <Toast.Body className="text-light">An email has been sent, please verify</Toast.Body>
-            </Toast>
-            : null}
-    </ToastContainer>);
+        <ToastContainer className="p-3 tst" >
+            {verified === "verified and registered" ?
+                <Toast bg="success" show={true} onClose={false}>
+                    <Toast.Header>
+                        <img src='' className="rounded me-2" alt="" />
+                        <strong className="me-auto">HookMeUp</strong>
+                    </Toast.Header>
+                    <Toast.Body className="text-light">An email has been sent, please verify</Toast.Body>
+                </Toast>
+                : null}
+        </ToastContainer>);
 }
 
 const SignUp = () => {
@@ -87,7 +87,7 @@ const SignUp = () => {
             window.alert("email already exists");
         } else if (data.message === "email sent") {
             setnotify(true);
-            //interval();
+            gotoVerify();
 
         } else {
             window.alert("account created successfully");
@@ -96,29 +96,33 @@ const SignUp = () => {
         }
     }
 
-  
-     /*  
-       const interval = setInterval(() => {
-            console.log("verify function ran");    
-        var abc;
-             fetch('/verify', {
-              method: 'GET',
-              body: abc
+
+
+    const gotoVerify = () => {
+/*
+
+        const interval = setInterval(() => {
+
+            var abc;
+            fetch('/active', {
+                method: 'POST',
+                body: abc
             }).then((response) => {
-              //console.log(response);
-              response.json().then((res) => {console.log(res.message); setverified(res.message)})
+                response.json().then((res) => {
+                    console.log(res.message);
+                    if (res.message == "active") {
+                        console.log("clear interval");
+                        setverified(res.message);
+                        clearInterval(interval);
+                    }
+                })
             }).catch((error) => console.log(error));
-        }, 2000);
+        }, 1000);
+*/
+    }
 
-        console.log("after interval");
 
-        if(verified==="verified and registered"){
-            console.log("clear interval");
-            clearInterval(interval);
-        }
-    */
 
-    
 
     return (
         <>
@@ -135,7 +139,13 @@ const SignUp = () => {
                             <form method="post">
                                 <div className="mb-3">
                                     <div className=" w-50 d-inline-block ">
-                                        <input type="text" className="form-control" id="firstName" name="firstName" autoComplete="off" placeholder="First name*" value={user.firstName} onChange={handleInputs} />
+                                    <FloatingLabel
+    controlId="floatingInput"
+    label="First name"
+    
+  >
+                                        <Form.Control type="text" className="form-control" id="firstName" name="firstName" autoComplete="off" placeholder="First name*" value={user.firstName} onChange={handleInputs} />
+                                        </FloatingLabel>
                                     </div>
                                     <div className=" w-50  d-inline-block ">
                                         <input type="text" className="form-control" id="lastName" name="lastName" autoComplete="off" placeholder="Last name*" value={user.lastName} onChange={handleInputs} />

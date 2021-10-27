@@ -26,7 +26,12 @@ const userSchema = new mongoose.Schema({
                 require:true
             }
         }
-    ]
+    ],
+    active: {
+    type: Boolean,
+    required: true,
+    default: false
+    }
 });
 
 //hashing password
@@ -42,7 +47,7 @@ userSchema.methods.generateAuthToken=async function(){
     try{
         let token =jwt.sign({_id:this._id},process.env.SECRETKEY);//to generrate token
         this.tokens=this.tokens.concat({token:token});//here the second token is the token generated in the above line
-        await this.save();
+        //await this.save();
         return token;
     }catch(err){
         console.log(err);

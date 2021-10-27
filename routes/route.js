@@ -23,21 +23,21 @@ var smtpTransport = nodemailer.createTransport({
         pass: pswrd
     }
 });
-var user, random, mailOptions, host, link;
+var user, mailOptions, host, link, token;
 
 
 //signup
 router.post('/signup', async (req, res) => {
 
+
     const { firstName, lastName, email, password } = req.body;
 
     console.log(firstName, lastName, email, password);
 
-
-
     if (!firstName || !lastName || !email || !password) {
         return res.status(422).json({ error: "fill all details" });
     }
+
 
     try {
         const userExist = await User.findOne({ email: email });
@@ -46,11 +46,15 @@ router.post('/signup', async (req, res) => {
             return res.status(422).json({ error: "email already exists" });
         }
 
-        //sending veriication email
-        random = Math.floor((Math.random() * 100) + 54);
+        user = new User({ firstName, lastName, email, password });
+        
+        token = await user.generateAuthToken();
+        console.log(user);
+        
+        //sending veriication email 
         host = req.get('host');
         console.log("host:" + host);
-        link = "http://" + req.get('host') + "/verify?id=" + random;
+        link = "http://" + req.get('host') + "/verify?id=" + token;
         console.log("link:" + link);
 
         mailOptions = {
@@ -73,8 +77,6 @@ router.post('/signup', async (req, res) => {
         });
         //ends here   
 
-        user = new User({ firstName, lastName, email, password });
-
         //hashing password
 
     } catch (err) {
@@ -82,36 +84,44 @@ router.post('/signup', async (req, res) => {
     }
 })
 
+
 //verify
 router.get('/verify', async function (req, res) {
 
 
     console.log(req.protocol + ":/" + req.get('host'));
 
-    if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
-        console.log("Domain is matched. Information is from Authentic email");
-console.log(req.query.id); 
-        if (req.query.id == random) {
+    if((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
+        console.log("Domain is matched.");
+
+        console.log(req.query.id);
+
+        if(req.query.id == token) {
+            //res.status(200).json({message:"verified"});
 
             console.log("Email " + mailOptions.to + " is been Successfully verified");
+            user.active=true;
+            console.log(user);
             await user.save();
+            
 
-            const token = await user.generateAuthToken();
+            
+/*
             res.cookie('jwt', token, {
                 expires: new Date(Date.now() + 3600000),
-                httpOnly: true 
+                httpOnly: true
             });
             res.cookie('email', email, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true
-            });
-
-            res.status(201).json({ message: "verified and registered" })
+            }); 
+*/
+            res.redirect('http://localhost:3000');
 
         } else {
             res.status(201).json({ message: "not verified" })
             console.log("email is not verified");
-        }
+        }  
 
     } else {
         res.status(201).json({ message: "unknown source" })
@@ -119,6 +129,25 @@ console.log(req.query.id);
     }
 
 });
+
+//active status   
+/*
+router.post('/active',async (req,res)=>{
+    try{
+        const act = await User.findOne({ email: user.email });
+        console.log("act - "+act);
+        console.log("act.active - "+act.active);
+        if(act.active===true){
+           res.status(201).json({ message: "active" })
+        }else{
+            res.status(201).json({ message: "not active" })
+        }
+    }catch (err) {
+        console.log(err);
+    }
+});
+*/
+
 
 
 
