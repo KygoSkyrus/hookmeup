@@ -91,7 +91,7 @@ router.get('/verify', async function (req, res) {
     if((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
         console.log("Domain is matched.");
 
-        console.log(req.query.id);
+        //console.log(req.query.id);
 
         if(req.query.id == token) {
             //res.status(200).json({message:"verified"});
@@ -125,9 +125,11 @@ router.get('/verify', async function (req, res) {
 
 });
 
-//active status   
-/*
-router.post('/active',async (req,res)=>{
+
+
+//accoun create
+router.post('/create', async (req,res) => {
+
     try{
         const act = await User.findOne({ email: user.email });
         console.log("act - "+act);
@@ -140,8 +142,9 @@ router.post('/active',async (req,res)=>{
     }catch (err) {
         console.log(err);
     }
+
 });
-*/
+
 
 
 
@@ -163,6 +166,7 @@ router.post('/signin', async (req, res) => {
         if (userLogin) {
             const isMatch = await bcrypt.compare(password, userLogin.password);
 
+            //try implementing that if there is already token then dont generte the token or replace the token with new one
             const token = await userLogin.generateAuthToken();
             //console.log(token);
 

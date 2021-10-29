@@ -1,44 +1,9 @@
 import React, { useState } from 'react';
 import { Toast, ToastContainer, Form, FloatingLabel } from 'react-bootstrap'
+import Notification from './Notification';
 
 
 
-function Example(props) {
-
-    const { notify } = props;
-    const [show, setShow] = useState(true);
-
-    return (
-        <ToastContainer className="p-3 tst" >
-            {notify === true ?
-                <Toast bg="danger" show={show} onClose={() => setShow(false)} delay={3000} autohide>
-                    <Toast.Header>
-                        <img src='' className="rounded me-2" alt="" />
-                        <strong className="me-auto">HookMeUp</strong>
-                    </Toast.Header>
-                    <Toast.Body className="text-light">An email has been sent, please verify</Toast.Body>
-                </Toast>
-                : null}
-        </ToastContainer>);
-}
-
-function Example2(props) {
-
-    const { verified } = props;
-
-    return (
-        <ToastContainer className="p-3 tst" >
-            {verified === "verified and registered" ?
-                <Toast bg="success" show={true} onClose={false}>
-                    <Toast.Header>
-                        <img src='' className="rounded me-2" alt="" />
-                        <strong className="me-auto">HookMeUp</strong>
-                    </Toast.Header>
-                    <Toast.Body className="text-light">Your account has been verified</Toast.Body>
-                </Toast>
-                : null}
-        </ToastContainer>);
-}
 
 const SignUp = () => {
 
@@ -47,9 +12,7 @@ const SignUp = () => {
     });
 
     const [notify, setnotify] = useState(false);//for notifications
-    const [verified, setverified] = useState(false);
-
-
+    
 
     let name, value;
     const handleInputs = (e) => {
@@ -98,28 +61,28 @@ const SignUp = () => {
     }
 
 
-/*
-    const gotoVerify = () => {
-        
-                const interval = setInterval(() => {
-        
-                    var abc;
-                    fetch('/active', {
-                        method: 'POST',
-                        body: abc
-                    }).then((response) => {
-                        response.json().then((res) => {
-                            console.log(res.message);
-                            if (res.message == "active") {
-                                console.log("clear interval");
-                                setverified(res.message);
-                                clearInterval(interval);
-                            }
-                        })
-                    }).catch((error) => console.log(error));
-                }, 1000);
-    }
- */
+    /*
+        const gotoVerify = () => {
+            
+                    const interval = setInterval(() => {
+            
+                        var abc;
+                        fetch('/active', {
+                            method: 'POST',
+                            body: abc
+                        }).then((response) => {
+                            response.json().then((res) => {
+                                console.log(res.message);
+                                if (res.message == "active") {
+                                    console.log("clear interval");
+                                    setverified(res.message);
+                                    clearInterval(interval);
+                                }
+                            })
+                        }).catch((error) => console.log(error));
+                    }, 1000);
+        }
+     */
 
 
 
@@ -161,8 +124,9 @@ const SignUp = () => {
                 </div>
             </div>
 
-            <Example notify={notify} />
-            <Example2 verified={verified} />
+            {notify === true ?
+                <Notification text="An email has been sent, please verify" bg="danger" />
+                : null}
 
         </>
     )
