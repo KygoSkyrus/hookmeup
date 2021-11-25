@@ -1,5 +1,5 @@
-import React,{} from 'react'
-import { BrowserRouter as Router, Link, Switch , Route } from 'react-router-dom';
+import React, { } from 'react'
+import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import SignIn from './components/Signin'
@@ -10,36 +10,47 @@ import Verification from './components/Verification';
 //import Cookies from 'universal-cookie';
 
 
+const Home = () => {
+  return (
+    <div className="main-bg">
+      <p className="main-name">hook me up</p>
+      <SignIn />
+      <button className="create-acc-btn " data-bs-toggle="modal" href="#exampleModalToggle" >
+        Get hooked
+      </button>
+    </div>
+  )
+}
 
 
 function App() {
 
 
- 
+
 
   return (
     <Router>
-    <div className="App">
+      <div className="App">
 
-     <div className="main-bg">
-        <p className="main-name">hook me up</p>
-        <SignIn/>
-        <button className="create-acc-btn " data-bs-toggle="modal" href="#exampleModalToggle" >
-          Get hooked
-        </button> 
+
+
+        <Route exact path="/">
+          <Home />
+        </Route>
+
+        <Route path="/main">
+          <Main />
+        </Route>
+
+        <Route path="/verification">
+          <Verification />
+        </Route>
+
+        <Route path="/create">
+          <Create />
+        </Route>
+
       </div>
-      
-      <Route  path="/main">
-        <Main/>
-      </Route>
-
-      <Route  path="/verification">
-        <Verification/>
-      </Route>
-{/* 
-<Create/>
-*/}
-    </div>
     </Router>
   );
 }

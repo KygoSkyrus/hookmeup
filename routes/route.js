@@ -127,7 +127,7 @@ router.get('/verify', async function (req, res) {
 
 
 
-//accoun create
+//account create
 router.post('/create', async (req,res) => {
 
     try{
