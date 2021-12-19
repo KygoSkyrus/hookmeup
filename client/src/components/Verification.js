@@ -7,7 +7,7 @@ const Verification = () => {
     return (
         <div className="cont">
             <section>
-<Link to='/create'>create link</Link>
+               <Link to='/create'>create account</Link>
             </section>
 
             <Notification text="Your email has been verified, Proceed to Main page" bg="success" />

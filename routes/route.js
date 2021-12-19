@@ -47,10 +47,10 @@ router.post('/signup', async (req, res) => {
         }
 
         user = new User({ firstName, lastName, email, password });
-        
+
         token = await user.generateAuthToken();
         console.log(user);
-        
+
         //sending veriication email 
         host = req.get('host');
         console.log("host:" + host);
@@ -64,7 +64,7 @@ router.post('/signup', async (req, res) => {
             html: '<p>Click <a href="' + link + '">here</a> to verify your email</p>'
         }
 
-        console.log(mailOptions);  
+        console.log(mailOptions);
 
         smtpTransport.sendMail(mailOptions, function (error, info) {
             if (error) {
@@ -82,25 +82,25 @@ router.post('/signup', async (req, res) => {
 })
 
 
-//verify
+//verify(will run when the user clicks on verification link)
 router.get('/verify', async function (req, res) {
 
 
     console.log(req.protocol + ":/" + req.get('host'));
 
-    if((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
+    if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
         console.log("Domain is matched.");
 
         //console.log(req.query.id);
 
-        if(req.query.id == token) {
+        if (req.query.id == token) {
             //res.status(200).json({message:"verified"});
 
             console.log("Email " + mailOptions.to + " is been Successfully verified");
-            user.active=true;
+            user.active = true;
             console.log(user);
             await user.save();
-            
+
             //cookie
             res.cookie('jwt', token, {
                 expires: new Date(Date.now() + 3600000),
@@ -109,14 +109,14 @@ router.get('/verify', async function (req, res) {
             res.cookie('email', user.email, {
                 expires: new Date(Date.now() + 3600000),
                 httpOnly: true
-            }); 
+            });
 
             res.redirect('http://localhost:3000/verification');
 
         } else {
             res.status(201).json({ message: "not verified" })
             console.log("email is not verified");
-        }  
+        }
 
     } else {
         res.status(201).json({ message: "unknown source" })
@@ -127,19 +127,28 @@ router.get('/verify', async function (req, res) {
 
 
 
-//account create
-router.post('/create', async (req,res) => {
+//account active
+router.post('/active', async (req, res) => {
 
-    try{
-        const act = await User.findOne({ email: user.email });
-        console.log("act - "+act);
-        console.log("act.active - "+act.active);
-        if(act.active===true){
-           res.status(201).json({ message: "active" })
-        }else{
-            res.status(201).json({ message: "not active" })
+    try {
+        // const act = await User.findOne({ email: user.email });
+        const act = await User.findOne({ email: "gupta.divya1116@gmail.com" });
+        console.log("this is active api")
+        console.log("act - " + act);
+        console.log("act.active - " + act.active);
+        
+        if (act) {
+            if (act.active === true) {
+                return res.status(201).json({ message: act })
+                //set cookies here maybe
+            } else {
+                return res.status(201).json({ message: "not active" })
+            }
+        } else {
+            return res.status(201).json({ message: "user not found" })
         }
-    }catch (err) {
+
+    } catch (err) {
         console.log(err);
     }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Toast, ToastContainer, Form, FloatingLabel } from 'react-bootstrap'
+//import { Toast, ToastContainer, Form, FloatingLabel } from 'react-bootstrap'
 import Notification from './Notification';
 
 
@@ -51,39 +51,12 @@ const SignUp = () => {
             window.alert("email already exists");
         } else if (data.message === "email sent") {
             setnotify(true);
-            //gotoVerify();
-
         } else {
             window.alert("account created successfully");
             console.log("account created successfully");
             document.getElementById('closeSignup').click();
         }
     }
-
-
-    /*
-        const gotoVerify = () => {
-            
-                    const interval = setInterval(() => {
-            
-                        var abc;
-                        fetch('/active', {
-                            method: 'POST',
-                            body: abc
-                        }).then((response) => {
-                            response.json().then((res) => {
-                                console.log(res.message);
-                                if (res.message == "active") {
-                                    console.log("clear interval");
-                                    setverified(res.message);
-                                    clearInterval(interval);
-                                }
-                            })
-                        }).catch((error) => console.log(error));
-                    }, 1000);
-        }
-     */
-
 
 
     return (
