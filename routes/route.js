@@ -3,6 +3,7 @@ const router = express('router');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
 
 const cookieParser = require('cookie-parser');
 router.use(cookieParser());
@@ -13,6 +14,19 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '../env/config.env' });
 const pswrd = process.env.PSWRD;
 const emailAdd = process.env.EMAIL;
+
+
+//multer things
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'public')
+    },
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' +file.originalname)
+    }
+  })
+  const upload = multer({ storage: storage }).single('file')
+
 
 
 //smtp seerver
@@ -154,6 +168,41 @@ router.post('/active', async (req, res) => {
 
 });
 
+
+//secondaryDetails      
+router.post('/secondarydetails', async (req, res) => {
+
+    try {
+        const {gender, interests,file, email } = req.body;
+
+        // if (!email || !password) {
+        //     return res.status(400).json({ error: "fill all details" });
+        // }
+        console.log(gender,email,interests,file);
+
+
+        const userLogin = await User.findOne({ email: email });
+
+        //console.log(userLogin);
+/*
+        if (userLogin) {
+            const isMatch = await bcrypt.compare(password, userLogin.password);
+
+
+            if (!isMatch) {
+                res.status(400).json({ error: "invalid credentials" });
+            } else {
+                res.status(400).json({ message: "user logged in successfully" });
+            }
+        } else {
+            res.status(200).json({ error: "account doesn't exists" });
+        }
+        */
+
+    } catch (err) {
+        console.log(err);
+    }
+})
 
 
 

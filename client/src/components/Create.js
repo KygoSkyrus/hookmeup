@@ -16,15 +16,20 @@ const Quality = (props) => {
 
 const Create = () => {
 
+    const d = new FormData();
+
     const [file, setFile] = useState(null);
     const [userDetails, setuserDetails] = useState();
     const [secondaryDetails, setsecondaryDetails] = useState({
-        gender: "", interests: [], dp: file
+        gender: "", interests: [], dp: d
     });
 
     //for image
     const handleChange = (e) => {
+
         setFile(e.target.files[0])
+        d.append('file', file);
+        console.log(d)
     }
 
     //storing values from the form(for radio buttons)
@@ -36,25 +41,25 @@ const Create = () => {
         console.log(name, value)
         setsecondaryDetails({ ...secondaryDetails, [name]: value });
     }
-    
+
     //for checkbox
     const handleCheck = (e) => {
         let isChecked = e.target.checked;//returns true of false
         name = e.target.name;//name of the input i.e. interest
         value = e.target.value;
 
-        if(isChecked===true){
-           secondaryDetails.interests.push(value);//push the value in array
-           secondaryDetails.interests.filter((val, i, arr) => arr.indexOf(value) === i);//filtering & removing the duplicate values
+        if (isChecked === true) {
+            secondaryDetails.interests.push(value);//push the value in array
+            secondaryDetails.interests.filter((val, i, arr) => arr.indexOf(value) === i);//filtering & removing the duplicate values
         }
-        
-        if(isChecked===false){
-            var index=secondaryDetails.interests.indexOf(value);//getting the index of value that is unseleceted
+
+        if (isChecked === false) {
+            var index = secondaryDetails.interests.indexOf(value);//getting the index of value that is unseleceted
             if (index > -1) {
                 secondaryDetails.interests.splice(index, 1);//splicing that value from the index
             }
         }
-        console.log(secondaryDetails) 
+        console.log(secondaryDetails)
     }
 
 
@@ -85,15 +90,52 @@ const Create = () => {
     //also ask from this api for user's all details and then save it to cookie  from here (no need to save it from the serverside)  
 
 
+    const email = "gupta.divya1116@gmail.com";
+
+    console.log(file);
+    console.log(secondaryDetails);
+
+    const handleClick = async (e) => {
+
+        e.preventDefault();
+
+        const { gender, interests, dp } = secondaryDetails;
+        //console.log(user);
 
 
-console.log(file);
+        //secondary details to backend 
+        const res = await fetch('/secondarydetails', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                gender, interests, file, email
+            })
+        });
+
+        const data = await res.json();
+
+        console.log(data);
+        if (data.error === "fill all details" || !data) {
+            window.alert("fill all details");
+            console.log("fill all details");
+        } else if (data.error === "email already exists") {
+            window.alert("email already exists");
+        } else if (data.message === "email sent") {
+            //setnotify(true);
+        } else {
+            window.alert("account created successfully");
+            console.log("account created successfully");
+            document.getElementById('closeSignup').click();
+        }
+    }
 
 
     return (
 
         <div className="container bg-light p-5 mt-5 mb-5">
-            {!userDetails ?
+            {userDetails ?
                 <>
                     <Row>
                         <Col>
@@ -165,27 +207,27 @@ console.log(file);
                             <Form.Label>Describe yourself</Form.Label><br />
                             <Quality label="New in Town" handleInputs={handleCheck} />
                             <Quality label="Swimming" handleInputs={handleCheck} />
-                            <Quality label="Athlete" handleInputs={handleCheck}/>
-                            <Quality label="Stand up Comedy" handleInputs={handleCheck}/>
-                            <Quality label="Poetry" handleInputs={handleCheck}/>
-                            <Quality label="Yoga" handleInputs={handleCheck}/>
-                            <Quality label="Fishing" handleInputs={handleCheck}/>
-                            <Quality label="House Parties" handleInputs={handleCheck}/>
-                            <Quality label="90s Kid" handleInputs={handleCheck}/>
-                            <Quality label="Movies" handleInputs={handleCheck}/>
-                            <Quality label="Cricket" handleInputs={handleCheck}/>
-                            <Quality label="Tea" handleInputs={handleCheck}/>
-                            <Quality label="Gamer" handleInputs={handleCheck}/>
-                            <Quality label="Writer" handleInputs={handleCheck}/>
-                            <Quality label="Photography" handleInputs={handleCheck}/>
-                            <Quality label="Netflix" handleInputs={handleCheck}/>
-                            <Quality label="Cooking" handleInputs={handleCheck}/>
-                            <Quality label="Spirituality" handleInputs={handleCheck}/>
+                            <Quality label="Athlete" handleInputs={handleCheck} />
+                            <Quality label="Stand up Comedy" handleInputs={handleCheck} />
+                            <Quality label="Poetry" handleInputs={handleCheck} />
+                            <Quality label="Yoga" handleInputs={handleCheck} />
+                            <Quality label="Fishing" handleInputs={handleCheck} />
+                            <Quality label="House Parties" handleInputs={handleCheck} />
+                            <Quality label="90s Kid" handleInputs={handleCheck} />
+                            <Quality label="Movies" handleInputs={handleCheck} />
+                            <Quality label="Cricket" handleInputs={handleCheck} />
+                            <Quality label="Tea" handleInputs={handleCheck} />
+                            <Quality label="Gamer" handleInputs={handleCheck} />
+                            <Quality label="Writer" handleInputs={handleCheck} />
+                            <Quality label="Photography" handleInputs={handleCheck} />
+                            <Quality label="Netflix" handleInputs={handleCheck} />
+                            <Quality label="Cooking" handleInputs={handleCheck} />
+                            <Quality label="Spirituality" handleInputs={handleCheck} />
                         </div>
                     </Form>
 
                     <div className="mt-5 d-flex justify-content-center"  >
-                        <Button variant="outline-danger" className="px-5">Create</Button>
+                        <Button variant="outline-danger" className="px-5" onClick={handleClick}>Create</Button>
                     </div>
                 </>
                 :

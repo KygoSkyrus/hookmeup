@@ -5,7 +5,7 @@ import Notification from './Notification';
 
 
 
-const SignUp = () => {
+const SignUp = () => { 
 
     const [user, setuser] = useState({
         firstName: "", lastName: "", email: "", password: ""
